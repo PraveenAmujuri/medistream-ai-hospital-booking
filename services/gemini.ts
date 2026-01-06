@@ -2,7 +2,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SymptomAnalysis, UrgencyLevel } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const ai = new GoogleGenAI({
+  apiKey: process.env.GOOGLE_API_KEY!,
+});
+
 
 export const analyzeSymptoms = async (symptoms: string): Promise<SymptomAnalysis> => {
   try {
