@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.user import UserCreate, UserLogin
 from app.core.database import users_collection
 from app.core.security import hash_password, verify_password, create_access_token
-from bson import ObjectId
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
 
 @router.post("/register")
 async def register(user: UserCreate):
@@ -32,7 +32,16 @@ async def register(user: UserCreate):
         "role": "user"
     })
 
-    return {"access_token": token}
+    return {
+        "access_token": token,
+        "user": {
+            "id": str(result.inserted_id),
+            "email": user.email,
+            "username": user.username,
+            "role": "user",
+            "provider": "local"
+        }
+    }
 
 
 @router.post("/login")
@@ -53,4 +62,13 @@ async def login(data: UserLogin):
         "role": user["role"]
     })
 
-    return {"access_token": token}
+    return {
+        "access_token": token,
+        "user": {
+            "id": str(user["_id"]),
+            "email": user["email"],
+            "username": user["username"],
+            "role": user["role"],
+            "provider": "local"
+        }
+    }
