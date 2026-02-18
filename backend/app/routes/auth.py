@@ -6,22 +6,33 @@ from app.core.security import hash_password, verify_password, create_access_toke
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
+# =========================
+# REGISTER
+# =========================
 @router.post("/register")
 async def register(user: UserCreate):
+
     existing = await users_collection.find_one({
         "$or": [
             {"email": user.email},
             {"username": user.username}
         ]
     })
+
     if existing:
         raise HTTPException(status_code=400, detail="User already exists")
 
     doc = {
         "email": user.email,
         "username": user.username,
+        "name": user.username,  # default name
         "hashed_password": hash_password(user.password),
-        "role": "user",
+        "avatar": "",
+        "bloodType": "N/A",
+        "weight": "",
+        "height": "",
+        "lastCheckup": "Not Available",
+        "role": "patient",
         "provider": "local"
     }
 
@@ -29,23 +40,33 @@ async def register(user: UserCreate):
 
     token = create_access_token({
         "user_id": str(result.inserted_id),
-        "role": "user"
+        "role": "patient"
     })
 
     return {
         "access_token": token,
         "user": {
             "id": str(result.inserted_id),
-            "email": user.email,
-            "username": user.username,
-            "role": "user",
-            "provider": "local"
+            "email": doc["email"],
+            "username": doc["username"],
+            "name": doc["name"],
+            "avatar": doc["avatar"],
+            "bloodType": doc["bloodType"],
+            "weight": doc["weight"],
+            "height": doc["height"],
+            "lastCheckup": doc["lastCheckup"],
+            "role": doc["role"],
+            "provider": doc["provider"]
         }
     }
 
 
+# =========================
+# LOGIN
+# =========================
 @router.post("/login")
 async def login(data: UserLogin):
+
     user = await users_collection.find_one({
         "$or": [
             {"email": data.email_or_username},
@@ -66,9 +87,15 @@ async def login(data: UserLogin):
         "access_token": token,
         "user": {
             "id": str(user["_id"]),
-            "email": user["email"],
-            "username": user["username"],
-            "role": user["role"],
-            "provider": "local"
+            "email": user.get("email"),
+            "username": user.get("username"),
+            "name": user.get("name", user.get("username")),
+            "avatar": user.get("avatar", ""),
+            "bloodType": user.get("bloodType", "N/A"),
+            "weight": user.get("weight", ""),
+            "height": user.get("height", ""),
+            "lastCheckup": user.get("lastCheckup", "Not Available"),
+            "role": user.get("role", "patient"),
+            "provider": user.get("provider", "local")
         }
     }
