@@ -1,7 +1,12 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Form
 from app.schemas.user import UserCreate, UserLogin
 from app.core.database import users_collection
 from app.core.security import hash_password, verify_password, create_access_token
+from app.core.dependencies import get_current_user
+from bson import ObjectId
+from fastapi.security import OAuth2PasswordRequestForm
+from typing import Optional
+from fastapi import Depends, Form
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -64,6 +69,7 @@ async def register(user: UserCreate):
 # =========================
 # LOGIN
 # =========================
+
 @router.post("/login")
 async def login(data: UserLogin):
 
@@ -85,6 +91,7 @@ async def login(data: UserLogin):
 
     return {
         "access_token": token,
+        "token_type": "bearer",
         "user": {
             "id": str(user["_id"]),
             "email": user.get("email"),
@@ -98,4 +105,29 @@ async def login(data: UserLogin):
             "role": user.get("role", "patient"),
             "provider": user.get("provider", "local")
         }
+    }
+
+
+@router.get("/me")
+async def get_me(current_user=Depends(get_current_user)):
+
+    user = await users_collection.find_one(
+        {"_id": ObjectId(current_user["user_id"])}
+    )
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {
+        "id": str(user["_id"]),
+        "email": user.get("email"),
+        "username": user.get("username"),
+        "name": user.get("name"),
+        "avatar": user.get("avatar"),
+        "bloodType": user.get("bloodType"),
+        "weight": user.get("weight"),
+        "height": user.get("height"),
+        "lastCheckup": user.get("lastCheckup"),
+        "role": user.get("role"),
+        "provider": user.get("provider")
     }
