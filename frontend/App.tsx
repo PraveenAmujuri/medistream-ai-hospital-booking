@@ -98,13 +98,18 @@ const handleAuthSuccess = (backendUser: any) => {
     setCurrentUser(updatedUser);
   };
 
-  const handleBookingComplete = (appointment: Appointment) => {
-    const updated = [appointment, ...appointments];
-    setAppointments(updated);
-    localStorage.setItem('hospital_appointments', JSON.stringify(updated));
-    setCurrentView('Dashboard');
-    setActiveAnalysis(null);
-  };
+const handleBookingComplete = async (appointment: Appointment) => {
+  await apiFetch("/appointments", {
+    method: "POST",
+    body: JSON.stringify(appointment),
+  });
+
+  const updated = [appointment, ...appointments];
+  setAppointments(updated);
+
+  setCurrentView("Dashboard");
+  setActiveAnalysis(null);
+};
 
   const handleCancelAppointment = (id: string) => {
     const updated = appointments.map(appt =>
