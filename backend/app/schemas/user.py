@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, Literal
 
 
 class UserCreate(BaseModel):
@@ -23,7 +23,9 @@ class UserPublic(BaseModel):
     weight: Optional[str] = ""
     height: Optional[str] = ""
     lastCheckup: Optional[str] = "Not Available"
-    role: str
+
+    role: Literal["patient", "admin"] = "patient"
+
     provider: str
 
 

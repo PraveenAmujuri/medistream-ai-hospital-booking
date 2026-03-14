@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth, google_auth, ai
+from app.routes import auth, google_auth, ai, admin
 
 app = FastAPI(title="MediStream Backend")
 
@@ -15,6 +15,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(google_auth.router)
 app.include_router(ai.router)
+app.include_router(admin.router)
 
 @app.get("/health")
 async def health():
