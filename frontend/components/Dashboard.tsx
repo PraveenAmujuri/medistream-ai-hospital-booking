@@ -87,7 +87,28 @@ const Dashboard: React.FC<DashboardProps> = ({ appointments, onCancel, onResched
       showToast("Notification permission denied. Please enable them in your browser settings.", "error");
     }
   };
+const downloadReceipt = (appt: Appointment) => {
+  const receipt = `
+MediStream AI Hospital
 
+Patient: ${appt.patientName}
+Department: ${appt.department}
+Date: ${appt.date}
+Time: ${appt.time}
+Urgency: ${appt.urgency}
+Status: ${appt.status}
+
+Thank you for using MediStream AI.
+`;
+
+  const blob = new Blob([receipt], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `appointment-${appt.id}.txt`;
+  a.click();
+};
   const getUrgencyBadge = (level?: UrgencyLevel) => {
     switch (level) {
       case UrgencyLevel.EMERGENCY: return 'bg-red-50 text-red-600 border-red-100';
@@ -212,7 +233,15 @@ const Dashboard: React.FC<DashboardProps> = ({ appointments, onCancel, onResched
               )}
             </div>
             
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest group-hover:translate-y-1 transition-transform">Details →</span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedApptId(appt.id);
+          }}
+          className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline"
+        >
+          Details →
+        </button>
           </div>
         </div>
         <div className={`${isPast ? 'bg-slate-200' : 'bg-slate-900'} px-10 py-5 flex justify-between items-center text-white`}>
@@ -220,7 +249,14 @@ const Dashboard: React.FC<DashboardProps> = ({ appointments, onCancel, onResched
             <span className={`w-2 h-2 rounded-full mr-3 ${isPast ? 'bg-slate-400 shadow-none' : 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]'}`}></span>
             {isPast ? (appt.status === 'Cancelled' ? 'Record Stored' : 'Session Completed') : 'Verified Booking'}
           </span>
-          <button className={`${isPast ? 'text-slate-500' : 'text-blue-400'} text-[9px] font-black uppercase tracking-[0.3em] hover:text-white transition-colors`}>Digital Receipt →</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadReceipt(appt);
+            }}
+          >
+            Digital Receipt →
+          </button>
         </div>
       </div>
     );
