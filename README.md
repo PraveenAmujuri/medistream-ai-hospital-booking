@@ -1,4 +1,9 @@
-# MediStream AI --- Intelligent Hospital Triage Platform
+# MediStream AI — Intelligent Hospital Triage Platform
+
+[![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=white)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)]()
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white)]()
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-AI%20Engine-4285F4?style=for-the-badge&logo=google&logoColor=white)]()
 
 **MediStream AI** is a full-stack AI-powered hospital triage and
 appointment management system designed to assist patients in identifying
@@ -178,46 +183,6 @@ Browser notifications are used for alerts.
 
 Frontend: **Vercel**\
 Backend: **Render**
-
-------------------------------------------------------------------------
-
-# Installation
-
-## Clone Repository
-
-    git clone https://github.com/PraveenAmujuri/mediastream-ai-hospital.git
-
-------------------------------------------------------------------------
-
-## Backend Setup
-
-    cd backend
-    pip install -r requirements.txt
-
-Create `.env`
-
-    GEMINI_API_KEY=your_key
-    JWT_SECRET=your_secret
-    MONGO_URI=your_database_url
-
-Run server
-
-    uvicorn app.main:app --reload
-
-------------------------------------------------------------------------
-
-## Frontend Setup
-
-    cd frontend
-    npm install
-
-Create `.env`
-
-    VITE_BACKEND_URL=http://localhost:8000
-
-Run frontend
-
-    npm run dev
 
 ------------------------------------------------------------------------
 
