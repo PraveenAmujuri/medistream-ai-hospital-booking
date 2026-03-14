@@ -228,41 +228,6 @@ const Dashboard: React.FC<DashboardProps> = ({ appointments, onCancel, onResched
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4 animate-in fade-in duration-500 relative">
-      {/* QUICK DASHBOARD LINKS */}
-      <div className="flex flex-wrap items-center gap-4 mb-10 bg-white/60 backdrop-blur-md p-4 rounded-[2rem] border border-white shadow-xl sticky top-24 z-40">
-        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-4 mr-2">Quick Nav:</span>
-        <button 
-          onClick={() => onNavigate('Home')}
-          className="flex items-center space-x-2 px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-        >
-          <span>Home</span>
-        </button>
-        <button 
-          onClick={() => onNavigate('Dashboard')}
-          className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-indigo-100"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-          <span>My Appointments</span>
-        </button>
-        <button 
-          onClick={() => onNavigate('SymptomChecker')}
-          className="flex items-center space-x-2 px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-          <span>AI Triage</span>
-        </button>
-        <button 
-          onClick={() => onNavigate('Booking')}
-          className="flex items-center space-x-2 px-6 py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-          <span>Browse Clinics</span>
-        </button>
-        <div className="h-8 w-[1px] bg-slate-100 mx-2 hidden sm:block"></div>
-        <div className="flex-1 text-right pr-4 hidden lg:block">
-           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Appointment Dashboard</p>
-        </div>
-      </div>
 
       {/* Toast Notification */}
       {toast.visible && (
