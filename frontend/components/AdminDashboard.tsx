@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { apiFetch } from "../services/api";
 
 const AdminDashboard = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("hospital_appointments");
+  const loadAppointments = async () => {
+    try {
+      const data = await apiFetch("/admin/appointments");
 
-    if (saved) {
-      const all = JSON.parse(saved);
+      const priority: any = { Emergency: 3, Priority: 2, Normal: 1 };
 
-      // ⭐ show only active appointments
-      const active = all.filter((a: any) => a.status === "Scheduled");
-        const priority = { Emergency: 3, Priority: 2, Normal: 1 }
+      data.sort((a: any, b: any) => priority[b.urgency] - priority[a.urgency]);
 
-        active.sort((a:any, b:any) => priority[b.urgency] - priority[a.urgency])
-      setAppointments(active);
+      setAppointments(data);
+    } catch (err) {
+      console.error("Failed to load appointments", err);
     }
+  };
+
+  useEffect(() => {
+    loadAppointments();
+
+    // refresh queue every 5 seconds
+    const interval = setInterval(loadAppointments, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -31,14 +40,12 @@ const AdminDashboard = () => {
           <div className="space-y-3">
             {appointments.map((appt) => (
               <div
-                key={appt.id}
+                key={appt._id}
                 className="border rounded-xl p-4 flex justify-between items-center"
               >
                 <div>
                   <p className="font-bold">{appt.patientName}</p>
-                  <p className="text-sm text-slate-500">
-                    {appt.department}
-                  </p>
+                  <p className="text-sm text-slate-500">{appt.department}</p>
                   <p className="text-sm text-slate-500">
                     {appt.date} • {appt.time}
                   </p>
@@ -48,9 +55,7 @@ const AdminDashboard = () => {
                   <p className="font-bold text-blue-600">
                     {appt.urgency || "Normal"}
                   </p>
-                  <p className="text-xs text-slate-400">
-                    {appt.status}
-                  </p>
+                  <p className="text-xs text-slate-400">{appt.status}</p>
                 </div>
               </div>
             ))}

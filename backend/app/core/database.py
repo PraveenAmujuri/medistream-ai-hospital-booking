@@ -5,3 +5,4 @@ client = AsyncIOMotorClient(MONGODB_URI)
 db = client["medistream"]
 
 users_collection = db["users"]
+appointments_collection = db["appointments"]

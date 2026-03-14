@@ -7,6 +7,7 @@ import UserProfile from './components/UserProfile';
 import Auth from './components/Auth';
 import AdminDashboard from "./components/AdminDashboard";
 import { View, SymptomAnalysis, Appointment, User } from './types';
+import { apiFetch } from "./services/api";
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Home');
@@ -16,14 +17,16 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     useEffect(() => {
-  const savedAppts = localStorage.getItem('hospital_appointments');
-  if (savedAppts) {
-    try {
-      setAppointments(JSON.parse(savedAppts));
-    } catch (e) {
-      console.error("Failed to parse appointments", e);
-    }
+const loadAppointments = async () => {
+  try {
+    const data = await apiFetch("/appointments/my");
+    setAppointments(data);
+  } catch (e) {
+    console.error("Failed to load appointments", e);
   }
+};
+
+loadAppointments();
 
   const token = localStorage.getItem("access_token");
   if (!token) return;
