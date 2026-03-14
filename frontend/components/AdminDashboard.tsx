@@ -44,17 +44,41 @@ const AdminDashboard = () => {
                 className="border rounded-xl p-4 flex justify-between items-center"
               >
                 <div>
-                  <p className="font-bold">{appt.patientName}</p>
-                  <p className="text-sm text-slate-500">{appt.department}</p>
-                  <p className="text-sm text-slate-500">
+                    <p className="font-bold">{appt.patientName}</p>
+
+                    <p className="text-sm text-slate-500">
+                    Department: {appt.department}
+                    </p>
+
+                    <p className="text-sm text-slate-500">
                     {appt.date} • {appt.time}
-                  </p>
+                    </p>
+
+                    {appt.userSymptoms && (
+                    <p className="text-sm text-slate-600 mt-2">
+                        Symptoms: {appt.userSymptoms}
+                    </p>
+                    )}
+
+                    {appt.reasoning && (
+                    <p className="text-xs text-slate-400 mt-1 italic">
+                        AI reasoning: {appt.reasoning}
+                    </p>
+                )}
                 </div>
 
                 <div className="text-right">
-                  <p className="font-bold text-blue-600">
+                    <p
+                    className={`font-bold ${
+                        appt.urgency === "Emergency"
+                        ? "text-red-600"
+                        : appt.urgency === "Priority"
+                        ? "text-orange-500"
+                        : "text-blue-600"
+                    }`}
+                    >
                     {appt.urgency || "Normal"}
-                  </p>
+                    </p>
                   <p className="text-xs text-slate-400">{appt.status}</p>
                 </div>
               </div>
