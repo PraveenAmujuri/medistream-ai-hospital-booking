@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+const BASE_URL =
+  import.meta.env.VITE_BACKEND_URL ??
+  "https://medistream-ai-hospital-booking.onrender.com";
 
 export async function apiFetch<T = any>(
   path: string,
@@ -21,6 +23,7 @@ export async function apiFetch<T = any>(
       const err = await res.json();
       message = err.detail || message;
     } catch {}
+
     throw new Error(message);
   }
 
