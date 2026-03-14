@@ -183,11 +183,9 @@ Backend: Render
 
 Potential enhancements for the platform include:
 
-• Integration with real hospital information systems  
 • More advanced AI triage models  
 • Real-time queue updates using WebSockets  
 • SMS or email appointment reminders  
-• Electronic health record integration  
 
 ---
 

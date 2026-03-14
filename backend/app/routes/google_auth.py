@@ -36,8 +36,8 @@ async def google_login(data: GoogleLogin):
             "username": email.split("@")[0],
             "google_id": google_id,
             "name": name,
-            "role": "user",
-            "provider": "google"
+            "role": "patient",
+            "provider":"google"
         }
         result = await users_collection.insert_one(user)
         user["_id"] = result.inserted_id
