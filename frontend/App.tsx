@@ -5,6 +5,7 @@ import BookingFlow from './components/BookingFlow';
 import Dashboard from './components/Dashboard';
 import UserProfile from './components/UserProfile';
 import Auth from './components/Auth';
+import AdminDashboard from "./components/AdminDashboard";
 import { View, SymptomAnalysis, Appointment, User } from './types';
 
 const App: React.FC = () => {
@@ -49,25 +50,32 @@ const App: React.FC = () => {
 
 
   // ✅ Normalize backend user
-  const handleAuthSuccess = (backendUser: any) => {
-    const normalizedUser: User = {
-      id: backendUser.id,
-      name: backendUser.username || backendUser.name || "Patient",
-      email: backendUser.email,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        backendUser.username || backendUser.email
-      )}&background=2563eb&color=fff`,
-      bloodType: "Not Set",
-      weight: "",
-      height: "",
-      memberSince: new Date().toLocaleDateString(),
-      lastCheckup: "No record yet"
-    };
-
-    setIsLoggedIn(true);
-    setCurrentUser(normalizedUser);
-    setCurrentView("Profile");
+const handleAuthSuccess = (backendUser: any) => {
+  const normalizedUser: User = {
+    id: backendUser.id,
+    name: backendUser.username || backendUser.name || "Patient",
+    email: backendUser.email,
+    role: backendUser.role,   // ⭐ IMPORTANT
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      backendUser.username || backendUser.email
+    )}&background=2563eb&color=fff`,
+    bloodType: "Not Set",
+    weight: "",
+    height: "",
+    memberSince: new Date().toLocaleDateString(),
+    lastCheckup: "No record yet"
   };
+
+  setIsLoggedIn(true);
+  setCurrentUser(normalizedUser);
+
+  // ⭐ ROLE BASED ROUTING
+  if (backendUser.role === "admin") {
+    setCurrentView("AdminDashboard");
+  } else {
+    setCurrentView("Dashboard");
+  }
+};
 
   // ✅ Proper Logout
   const handleLogout = () => {
@@ -225,6 +233,8 @@ const App: React.FC = () => {
             onUpdateUser={handleUpdateUser}
           />
         ) : null;
+        case "AdminDashboard":
+  return <AdminDashboard />;
       default:
         return null;
     }

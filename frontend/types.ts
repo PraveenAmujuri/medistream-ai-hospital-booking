@@ -15,6 +15,7 @@ export interface User {
   height: string;
   memberSince: string;
   lastCheckup: string;
+  role: "patient" | "admin";   
   passwordHash?: string; // Stored for simulation
 }
 
@@ -50,4 +51,4 @@ export interface SymptomAnalysis {
   userSymptoms?: string;
 }
 
-export type View = 'Home' | 'SymptomChecker' | 'Booking' | 'Dashboard' | 'Profile' | 'Auth';
+export type View = 'Home' | 'SymptomChecker' | 'Booking' | 'Dashboard' | 'Profile' | 'Auth' | 'AdminDashboard';
