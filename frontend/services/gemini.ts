@@ -1,13 +1,8 @@
+import { apiFetch } from "./api";
+
 export async function analyzeSymptoms(symptoms: string) {
-  const res = await fetch("/api/analyze", {
+  return apiFetch("/api/analyze", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ symptoms }),
   });
-
-  if (!res.ok) {
-    throw new Error("AI request failed");
-  }
-
-  return res.json();
 }

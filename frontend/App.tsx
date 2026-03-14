@@ -14,24 +14,39 @@ const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Restore appointments
-    const savedAppts = localStorage.getItem('hospital_appointments');
-    if (savedAppts) {
-      try {
-        setAppointments(JSON.parse(savedAppts));
-      } catch (e) {
-        console.error("Failed to parse appointments", e);
-      }
+    useEffect(() => {
+  const savedAppts = localStorage.getItem('hospital_appointments');
+  if (savedAppts) {
+    try {
+      setAppointments(JSON.parse(savedAppts));
+    } catch (e) {
+      console.error("Failed to parse appointments", e);
     }
+  }
 
-    // Restore login from JWT
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      setIsLoggedIn(true);
-      // Optional: later call /auth/me to restore full user
+  const token = localStorage.getItem("access_token");
+  if (!token) return;
+
+  fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-  }, []);
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Invalid token");
+      return res.json();
+    })
+    .then(user => {
+      setIsLoggedIn(true);
+      setCurrentUser(user);
+    })
+    .catch(() => {
+      localStorage.removeItem("access_token");
+      setIsLoggedIn(false);
+      setCurrentUser(null);
+    });
+}, []);
+
 
   // ✅ Normalize backend user
   const handleAuthSuccess = (backendUser: any) => {
@@ -178,12 +193,20 @@ const App: React.FC = () => {
       case 'SymptomChecker':
         return <SymptomChecker onRecommendation={handleTriageComplete} />;
       case 'Booking':
-        return (
-          <BookingFlow
-            analysis={activeAnalysis}
-            onBookingComplete={handleBookingComplete}
+        return isLoggedIn ? (
+        <BookingFlow
+          analysis={activeAnalysis}
+          onBookingComplete={handleBookingComplete}
+          currentUser={currentUser}
+        />
+
+        ) : (
+          <Auth
+            onAuthSuccess={handleAuthSuccess}
+            onNavigateHome={() => setCurrentView('Home')}
           />
         );
+
       case 'Dashboard':
         return (
           <Dashboard

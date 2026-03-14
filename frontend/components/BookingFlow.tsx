@@ -1,16 +1,17 @@
 
 import React, { useState, useMemo } from 'react';
 import { MOCK_DOCTORS, DEPARTMENTS } from '../constants';
-import { Doctor, Appointment, UrgencyLevel, SymptomAnalysis } from '../types';
-
+import { Doctor, Appointment, UrgencyLevel, SymptomAnalysis, User } from '../types';
 interface BookingFlowProps {
   analysis?: SymptomAnalysis | null;
   onBookingComplete: (appointment: Appointment) => void;
+  currentUser: User | null;
 }
 
 const BookingFlow: React.FC<BookingFlowProps> = ({ 
   analysis,
-  onBookingComplete 
+  onBookingComplete,
+  currentUser
 }) => {
   const initialDepartment = analysis?.suggestedDepartment || 'General Medicine';
   const initialUrgency = analysis?.urgency;
@@ -46,7 +47,7 @@ const BookingFlow: React.FC<BookingFlowProps> = ({
       const newAppointment: Appointment = {
         id: `APT-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
         doctorId: selectedDoctor.id,
-        patientName: "Guest User",
+        patientName: currentUser?.name || "Patient",
         date: selectedDate,
         time: selectedSlot,
         department: selectedDept,
