@@ -40,6 +40,12 @@ const App: React.FC = () => {
     .then(user => {
       setIsLoggedIn(true);
       setCurrentUser(user);
+
+      if (user.role === "admin") {
+        setCurrentView("AdminDashboard");
+      } else {
+        setCurrentView("Dashboard");
+      }
     })
     .catch(() => {
       localStorage.removeItem("access_token");
